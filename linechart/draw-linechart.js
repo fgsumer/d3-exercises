@@ -1,6 +1,6 @@
 async function drawLineChart() {
   // 1. Access data
-  let dataset = await d3.json('./my_weather_data.json');
+  let dataset = await d3.json('./../data/my_weather_data.json');
 
   //console.table(dataset[0]);
 
