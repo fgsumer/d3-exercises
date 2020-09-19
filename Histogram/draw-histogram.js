@@ -27,8 +27,8 @@ async function drawHistogram() {
   const wrapper = d3
     .select('#wrapper')
     .append('svg')
-    .attr('width', dimensions.boundedWidth)
-    .attr('height', dimensions.boundedHeight);
+    .attr('width', dimensions.width)
+    .attr('height', dimensions.height);
 
   const bounds = wrapper
     .append('g')
