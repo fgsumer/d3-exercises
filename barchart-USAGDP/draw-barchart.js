@@ -54,10 +54,10 @@ async function drawLineChart() {
     .scaleTime()
     .domain(d3.extent(dataset, xAccessor))
     .range([0, dimensions.innerWidth]);
+  // .nice();
   // console.log(d3.extent(dataset, xAccessor));
 
   const bars = d3.select('g').selectAll('g').data(dataset).enter().append('g');
-  const barPadding = 1;
   const seebars = bars
     .append('rect')
     .attr('x', (d, i) => i * (dimensions.innerWidth / dataset.length))
@@ -76,6 +76,7 @@ async function drawLineChart() {
 
   const xAxisGenerator = d3.axisBottom().scale(xScale);
   const yAxisGenerator = d3.axisLeft().scale(yScale);
+  // const yAxisTopGenerator = d3.axistTop().scale(xScale);
 
   const xAxis = bounds
     .append('g')
@@ -83,6 +84,22 @@ async function drawLineChart() {
     .call(xAxisGenerator);
 
   const yAxis = bounds.append('g').call(yAxisGenerator);
+
+  const additionalInfo = xAxis
+    .append('text')
+    .attr('x', dimensions.innerWidth / 1.3)
+    .attr('y', dimensions.margin.bottom - 5)
+    .attr('fill', 'black')
+    .style('font-size', '1.4em')
+    .text('More Information : http://www.bea.gov/national/pdf/nipaguid.pdf');
+
+  const title = wrapper
+    .append('text')
+    .attr('x', dimensions.innerWidth / 2.3)
+    .attr('y', 35)
+    .attr('fill', 'black')
+    .style('font-size', '1.4em')
+    .text('UNITED STATES GDP');
 }
 
 drawLineChart();
