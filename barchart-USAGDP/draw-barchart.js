@@ -62,8 +62,8 @@ async function drawLineChart() {
   const yScale = d3
     .scaleLinear()
     .domain(d3.extent(dataset, yAccessor))
-    .range([dimensions.innerHeight, 0])
-    .nice();
+    .range([dimensions.innerHeight, 0]);
+  // .nice();
   // console.log(yScale(18064.7));
   // console.log(d3.extent(dataset, yAccessor));
 
@@ -81,7 +81,7 @@ async function drawLineChart() {
     .attr('y', (d) => yScale(yAccessor(d)))
     .attr('width', dimensions.innerWidth / dataset.length - 0.3)
     .attr('height', (d) => dimensions.innerHeight - yScale(yAccessor(d)))
-    .attr('fill', '#457b9d')
+    .attr('fill', '#123c69')
     .on('mouseover', function (d) {
       //Get this bar's x/y values, then augment for the tooltip
       let xPosition = parseFloat(d3.select(this).attr('x')) + dimensions.innerHeight / 1.7;
@@ -122,23 +122,24 @@ async function drawLineChart() {
     .append('text')
     .attr('x', dimensions.innerWidth / 1.3)
     .attr('y', dimensions.margin.bottom - 5)
-    .attr('fill', '#042f66')
+    .attr('fill', '#123c69')
     .style('font-size', '1.4em')
     .text('More Information : http://www.bea.gov/national/pdf/nipaguid.pdf');
 
   const title = wrapper
     .append('text')
-    .attr('x', dimensions.innerWidth / 2.3)
-    .attr('y', 35)
-    .attr('fill', '#042f66')
-    .style('font-size', '1.4em')
+    .attr('x', dimensions.innerWidth / 2)
+    .attr('y', 30)
+    .attr('fill', '#123c69')
+    .style('font-size', '2.5em')
+    .attr('text-anchor', 'middle')
     .text('UNITED STATES GDP');
 
   const yAxisLabel = yAxis
     .append('text')
     .attr('x', -30)
     .attr('y', 25)
-    .attr('fill', '#042f66')
+    .attr('fill', '#123c69')
     .style('font-size', '1.4em')
     .style('transform', 'rotate(270deg)')
     .text('Gross Domestic Product');
