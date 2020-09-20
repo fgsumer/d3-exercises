@@ -8,14 +8,30 @@ async function drawLineChart() {
   //console.table(dataset[0]);
 
   const yAccessor = (d) => d[1];
-  const dateParser = d3.timeParse('%Y-%m-%d');
+  const dateParser = d3.timeParse('%Y-%m-%d'); //string to date
   const xAccessor = (d) => dateParser(d[0]);
+
+  const formatYear = d3.timeFormat('%Y');
+  const YearAccessor = (d) => formatYear(xAccessor(d));
+
+  const formatMonth = d3.timeFormat('%B');
+  const quarter = (d) => {
+    if (formatMonth(xAccessor(d)) == 'January') {
+      return 1;
+    } else if (formatMonth(xAccessor(d)) == 'April') {
+      return 2;
+    } else if (formatMonth(xAccessor(d)) == 'July') {
+      return 3;
+    } else if (formatMonth(xAccessor(d)) == 'October') {
+      return 4;
+    }
+  };
 
   // 2. Create chart dimensions
 
   let dimensions = {
-    width: window.innerWidth * 0.8,
-    height: 700,
+    width: window.innerWidth * 0.7,
+    height: 600,
     margin: {
       top: 50,
       right: 15,
@@ -34,7 +50,8 @@ async function drawLineChart() {
     .select('#wrapper')
     .append('svg')
     .attr('width', dimensions.width)
-    .attr('height', dimensions.height);
+    .attr('height', dimensions.height)
+    .attr('class', 'boundry');
 
   const bounds = wrapper
     .append('g')
@@ -64,18 +81,34 @@ async function drawLineChart() {
     .attr('y', (d) => yScale(yAccessor(d)))
     .attr('width', dimensions.innerWidth / dataset.length - 0.3)
     .attr('height', (d) => dimensions.innerHeight - yScale(yAccessor(d)))
-    .attr('fill', 'cornflowerblue')
-    .on('mouseover', function () {
-      d3.select(this).attr('fill', 'white');
+    .attr('fill', '#457b9d')
+    .on('mouseover', function (d) {
+      //Get this bar's x/y values, then augment for the tooltip
+      let xPosition = parseFloat(d3.select(this).attr('x')) + dimensions.innerHeight / 1.7;
+      let yPosition = parseFloat(d3.select(this).attr('y')) / 2 + dimensions.height / 2;
+      //Update the tooltip position and value
+      let tooltip = d3
+        .select('#tooltip')
+        .style('left', xPosition + 'px')
+        .style('top', yPosition + 'px')
+        .select('#value')
+        .text(yAccessor(d));
+
+      d3.select('#year').text(YearAccessor(d));
+      d3.select('#quarter').text(quarter(d));
+
+      //Show the tooltip
+      d3.select('#tooltip').classed('hidden', false);
     })
     .on('mouseout', function (d) {
-      d3.select(this).attr('fill', 'cornflowerblue');
+      d3.select('#tooltip').classed('hidden', true);
     });
 
   // 6. Draw peripherals
 
   const xAxisGenerator = d3.axisBottom().scale(xScale);
   const yAxisGenerator = d3.axisLeft().scale(yScale);
+
   // const yAxisTopGenerator = d3.axistTop().scale(xScale);
 
   const xAxis = bounds
@@ -89,7 +122,7 @@ async function drawLineChart() {
     .append('text')
     .attr('x', dimensions.innerWidth / 1.3)
     .attr('y', dimensions.margin.bottom - 5)
-    .attr('fill', 'black')
+    .attr('fill', '#042f66')
     .style('font-size', '1.4em')
     .text('More Information : http://www.bea.gov/national/pdf/nipaguid.pdf');
 
@@ -97,9 +130,18 @@ async function drawLineChart() {
     .append('text')
     .attr('x', dimensions.innerWidth / 2.3)
     .attr('y', 35)
-    .attr('fill', 'black')
+    .attr('fill', '#042f66')
     .style('font-size', '1.4em')
     .text('UNITED STATES GDP');
+
+  const yAxisLabel = yAxis
+    .append('text')
+    .attr('x', -30)
+    .attr('y', 25)
+    .attr('fill', '#042f66')
+    .style('font-size', '1.4em')
+    .style('transform', 'rotate(270deg)')
+    .text('Gross Domestic Product');
 }
 
 drawLineChart();
