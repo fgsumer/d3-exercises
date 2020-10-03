@@ -51,7 +51,8 @@ async function drawLineChart() {
     .append('svg')
     .attr('width', dimensions.width)
     .attr('height', dimensions.height)
-    .attr('class', 'boundry');
+    .attr('class', 'boundry')
+    .attr('viewbox', `0, 0, ${dimensions.width}, ${dimensions.height}`);
 
   const bounds = wrapper
     .append('g')
@@ -62,8 +63,8 @@ async function drawLineChart() {
   const yScale = d3
     .scaleLinear()
     .domain(d3.extent(dataset, yAccessor))
-    .range([dimensions.innerHeight, 0]);
-  // .nice();
+    .range([dimensions.innerHeight, 0])
+    .nice();
   // console.log(yScale(18064.7));
   // console.log(d3.extent(dataset, yAccessor));
 
@@ -86,6 +87,8 @@ async function drawLineChart() {
       //Get this bar's x/y values, then augment for the tooltip
       let xPosition = parseFloat(d3.select(this).attr('x')) + dimensions.innerHeight / 1.7;
       let yPosition = parseFloat(d3.select(this).attr('y')) / 2 + dimensions.height / 2;
+      // let xPosition = parseFloat(d3.select(this).attr('x')) + 200;
+      // let yPosition = parseFloat(d3.select(this).attr('y')) + 50;
       //Update the tooltip position and value
       let tooltip = d3
         .select('#tooltip')
