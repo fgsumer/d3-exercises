@@ -38,11 +38,7 @@ async function drawScatter() {
 
   // 4. Create scales
 
-  const xScale = d3
-    .scaleLinear()
-    .domain(d3.extent(dataset, xAccessor))
-    .range([0, dimensions.boundedWidth])
-    .nice();
+  let xScale = d3.scaleLinear().domain(d3.extent(dataset, xAccessor)).range([0, 0]);
 
   const yScale = d3
     .scaleLinear()
@@ -57,7 +53,7 @@ async function drawScatter() {
 
   // 5. Draw data
 
-  const dots = bounds
+  let dots = bounds
     .selectAll('circle')
     .data(dataset)
     .enter()
@@ -70,22 +66,26 @@ async function drawScatter() {
 
   // 6. Draw peripherals
 
-  const xAxisGenerator = d3.axisBottom().scale(xScale);
+  let xAxisGenerator = d3.axisBottom().scale(xScale);
 
   const xAxis = bounds
     .append('g')
     .call(xAxisGenerator)
-    .style('transform', `translateY(${dimensions.boundedHeight}px)`);
+    .style('transform', `translateY(${dimensions.boundedHeight}px)`)
+    .attr('class', 'myXaxis')
+    .attr('opacity', '0');
 
   const xAxisLabel = xAxis
     .append('text')
     .attr('x', dimensions.boundedWidth / 2)
     .attr('y', dimensions.margin.bottom - 10)
+    .attr('class', 'x-axislabel')
+    .attr('opacity', '0')
     .attr('fill', 'black')
     .style('font-size', '1.4em')
     .html('Dew point (&deg;F)');
 
-  const yAxisGenerator = d3.axisLeft().scale(yScale).ticks(4);
+  let yAxisGenerator = d3.axisLeft().scale(yScale).ticks(4);
 
   const yAxis = bounds.append('g').call(yAxisGenerator);
 
@@ -98,5 +98,30 @@ async function drawScatter() {
     .text('Relative humidity')
     .style('transform', 'rotate(-90deg)')
     .style('text-anchor', 'middle');
+
+  // new x axis and position
+  xScale.range([0, dimensions.boundedWidth]);
+
+  bounds
+    .select('.myXaxis')
+    .transition()
+    .duration(2000)
+    .ease(d3.easeLinear)
+    .attr('opacity', '1')
+    .call(xAxisGenerator);
+
+  bounds
+    .selectAll('circle')
+    .transition()
+    .delay((d, i) => i * 3)
+    .duration(2000)
+    .attr('cx', (d) => xScale(xAccessor(d)))
+    .attr('cy', (d) => yScale(yAccessor(d)))
+    .transition();
+  // .delay((d, i) => i * 3)
+  // .duration(2000)
+  // .style('fill', 'red');
+
+  bounds.select('.x-axislabel').transition().duration(3000).attr('opacity', '1');
 }
 drawScatter();
