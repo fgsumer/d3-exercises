@@ -2,12 +2,37 @@
 <html lang="en">
   <head>
     <title>Zip Code Map</title>
+    <link rel="stylesheet" href="./styles.css"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&family=Michroma&display=swap" rel="stylesheet">
   </head>
+  <style>
+
+  </style>
   <body>
-    <div id="wrapper"></div>
+    <div id="wrapper">
+      <h1>USA map of ZIP codes</h1>
+      <div class="arrow">
+        <p>To see the ZIP codes by states</p>
+        <img  src="./arrow.png" alt="arrow icon">
+      </div>
     </div>
+    <div class="reveal-main"></div>
+    <div class="main"></div>
+   
     <!-- <svg id="my_dataviz" width="630" height="350"></svg> -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="./draw-map.js"></script>
+    <script>
+      $(document).scroll(function(){
+        if ($(document).scrollTop() > 350 ) {
+	        $('.main').addClass('active');
+	        $('.reveal-main').addClass('activetwo');
+        } else {
+	 	      $('.main').removeClass('active');
+          $('.reveal-main').removeClass('activetwo');
+	      }
+      });
+    </script>
   </body>
 </html>
